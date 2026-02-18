@@ -1,0 +1,7 @@
+{
+  "name": "Our Home Notes",
+  "description": "Looking to move to new area - get the insight about broadband speeds, local shops, schools, and crime statistics. ",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
