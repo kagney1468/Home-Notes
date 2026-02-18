@@ -1,13 +1,8 @@
-
 import { GoogleGenAI, Type, Modality, GenerateContentResponse } from "@google/genai";
-import { PropertyReport } from "../types";
+import { PropertyReport } from "../types.ts";
 
-// Note: process.env.API_KEY is handled externally
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
-/**
- * Fetches the initial report using structured output.
- */
 export async function fetchPropertyReport(address: string): Promise<PropertyReport> {
   const ai = getAI();
   const model = 'gemini-3-flash-preview';
@@ -15,7 +10,6 @@ export async function fetchPropertyReport(address: string): Promise<PropertyRepo
   const prompt = `Generate a detailed property area report for the address: "${address}" in England.`;
 
   try {
-    // Using responseSchema and responseMimeType as recommended in guidelines for JSON output
     const response = await ai.models.generateContent({
       model: model,
       contents: prompt,
@@ -88,20 +82,13 @@ export async function fetchPropertyReport(address: string): Promise<PropertyRepo
       },
     });
 
-    const text = response.text || "";
-    // Directly parse the JSON as the model is instructed to return only JSON
-    const parsedData = JSON.parse(text);
-    
-    return parsedData;
+    return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error("Error fetching report:", error);
     throw new Error("Failed to generate report. Please check the address and try again.");
   }
 }
 
-/**
- * Streams expert analysis.
- */
 export async function* fetchDeepAnalysisStream(report: PropertyReport): AsyncGenerator<string> {
   const ai = getAI();
   const model = 'gemini-3-pro-preview';
@@ -124,19 +111,13 @@ export async function* fetchDeepAnalysisStream(report: PropertyReport): AsyncGen
 
     for await (const chunk of result) {
       const c = chunk as GenerateContentResponse;
-      if (c.text) {
-        yield c.text;
-      }
+      if (c.text) yield c.text;
     }
   } catch (error) {
-    console.error("Streaming analysis error:", error);
     yield "The model was unable to complete the deep analysis at this time.";
   }
 }
 
-/**
- * Generates audio speech for the summary.
- */
 export async function fetchAudioSummary(text: string): Promise<string> {
   const ai = getAI();
   const model = 'gemini-2.5-flash-preview-tts';
@@ -157,7 +138,6 @@ export async function fetchAudioSummary(text: string): Promise<string> {
 
     return response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data || "";
   } catch (error) {
-    console.error("TTS error:", error);
     return "";
   }
 }

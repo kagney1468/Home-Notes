@@ -1,13 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { auth } from './services/firebase';
-import { AppState, PropertyReport } from './types';
-import { fetchPropertyReport } from './services/geminiService';
-import { LoadingScreen } from './components/LoadingScreen';
-import { ReportDashboard } from './components/ReportDashboard';
-import { ProfessionalInsightsAgent } from './components/ProfessionalInsightsAgent';
-import { AuthScreen } from './components/AuthScreen';
+import { auth } from './services/firebase.ts';
+import { AppState, PropertyReport } from './types.ts';
+import { fetchPropertyReport } from './services/geminiService.ts';
+import { LoadingScreen } from './components/LoadingScreen.tsx';
+import { ReportDashboard } from './components/ReportDashboard.tsx';
+import { ProfessionalInsightsAgent } from './components/ProfessionalInsightsAgent.tsx';
+import { AuthScreen } from './components/AuthScreen.tsx';
 import { 
   Search, Home, Mail, ArrowRight, CheckCircle2,
   Globe, MessageCircle, Briefcase, LogOut, Loader2, Sparkles, AlertCircle
@@ -28,7 +27,6 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      // Check if user exists and is verified
       if (user && user.emailVerified) {
         setCurrentUser(user);
       } else {
@@ -155,7 +153,7 @@ const App: React.FC = () => {
             </div>
 
             <div className="max-w-5xl mx-auto px-4 pt-12 pb-20">
-              {/* Opening Box - Highly Visible */}
+              {/* Opening Box */}
               <div className="mb-12 p-8 md:p-12 bg-gradient-to-br from-white to-indigo-50/40 border border-indigo-100 rounded-[3rem] shadow-2xl shadow-indigo-900/10 relative overflow-hidden animate-in slide-in-from-bottom-6 duration-700">
                 <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                   <Sparkles size={160} className="text-indigo-600" />
@@ -179,7 +177,6 @@ const App: React.FC = () => {
                 </p>
               </div>
 
-              {/* Conditional Search or Auth Interface */}
               <div className="max-w-2xl mx-auto mb-20">
                 {currentUser ? (
                   <div className="animate-in fade-in duration-500">
@@ -206,7 +203,6 @@ const App: React.FC = () => {
                 )}
               </div>
 
-              {/* Newsletter Component */}
               <div className="max-w-xl mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm mb-16">
                 <div className="flex items-center gap-3 mb-4 justify-center">
                   <Mail className="text-blue-600" size={20} />
@@ -231,10 +227,8 @@ const App: React.FC = () => {
                     </button>
                   </form>
                 )}
-                <p className="mt-3 text-[10px] text-slate-400 uppercase font-bold tracking-widest text-center">JOIN 2,500+ USERS GETTING AI PROPERTY INSIGHTS</p>
               </div>
 
-              {/* Geo Authority Section for SEO */}
               <div className="max-w-3xl mx-auto py-12 border-t border-slate-100 text-center">
                 <div className="flex items-center justify-center gap-2 text-slate-400 mb-6">
                   <Globe size={16} />
@@ -247,9 +241,6 @@ const App: React.FC = () => {
                     </span>
                   ))}
                 </div>
-                <p className="mt-8 text-slate-400 text-xs leading-relaxed max-w-lg mx-auto">
-                  NestCheck UK provides deep area intelligence for home buyers and renters across the South Coast (Bournemouth, Poole, Christchurch), Midlands, North West, and all major English regions.
-                </p>
               </div>
             </div>
           </div>
@@ -279,74 +270,18 @@ const App: React.FC = () => {
         )}
       </main>
 
-      {/* Professional Insights Agent */}
       {showProfessionalAgent && (
         <ProfessionalInsightsAgent onClose={() => setShowProfessionalAgent(false)} />
       )}
 
-      {/* Floating WhatsApp FAB */}
-      <a 
-        href={whatsappUrl} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-[60] bg-emerald-500 text-white p-4 rounded-full shadow-2xl hover:bg-emerald-600 hover:scale-110 transition-all group flex items-center gap-2"
-        aria-label="Contact us on WhatsApp"
-      >
-        <MessageCircle size={24} />
-        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-500 text-sm font-bold">
-          WhatsApp Us
-        </span>
-      </a>
-
       <footer className="bg-slate-900 text-slate-400 py-12 mt-auto">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-8 border-b border-slate-800 pb-8 mb-8">
-            <div className="max-w-md">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="bg-blue-600 p-1 rounded-lg"><Home className="text-white" size={16} /></div>
-                <span className="text-lg font-bold text-white tracking-tight">NestCheckUK</span>
-              </div>
-              <p className="text-sm italic mb-4">AI-Driven Real Estate Intelligence for England.</p>
-              
-              <div className="mb-6">
-                <h4 className="text-white text-xs font-bold uppercase mb-3">Contact Support</h4>
-                <div className="flex flex-col gap-2">
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-4 py-2 rounded-lg hover:bg-emerald-500/20 transition-all text-sm font-medium">
-                    <MessageCircle size={18} />
-                    07724 601320 (WhatsApp)
-                  </a>
-                </div>
-              </div>
-
-              <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-800">
-                <h4 className="text-white text-xs font-bold uppercase mb-2">Legal Disclaimer</h4>
-                <p className="text-[11px] leading-relaxed">
-                  The data provided by NestCheck UK is sourced from third-party online databases and AI analysis. 
-                  We make no warranties, expressed or implied, as to the accuracy, completeness, or reliability of this information. 
-                  Users are strictly responsible for verifying the data themselves and should consult with professional surveyors or solicitors before making any commitments.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-8 text-sm">
-               <div className="flex flex-col gap-2">
-                 <h4 className="text-white text-xs font-bold uppercase mb-2">Navigation</h4>
-                 <a href="#" className="hover:text-white">API Access</a>
-                 <a href="#" className="hover:text-white">Privacy Policy</a>
-                 <a href="#" className="hover:text-white">Terms of Service</a>
-               </div>
-               <div className="flex flex-col gap-2">
-                 <h4 className="text-white text-xs font-bold uppercase mb-2">Primary Coverage</h4>
-                 <span className="text-[10px] text-slate-500">Dorset & South Coast:</span>
-                 <p className="text-[11px] text-slate-400">Bournemouth, Poole, Christchurch, Dorchester</p>
-                 <span className="text-[10px] text-slate-500 mt-2">National Hubs:</span>
-                 <p className="text-[11px] text-slate-400">London, Manchester, Birmingham, Leeds</p>
-               </div>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="bg-blue-600 p-1 rounded-lg"><Home className="text-white" size={16} /></div>
+            <span className="text-lg font-bold text-white tracking-tight">NestCheckUK</span>
           </div>
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-medium uppercase tracking-widest opacity-60">
-            <p>© 2026 Kadima Systems Ltd • Data via Gemini 3 Flash</p>
-            <p>Empowering home searches with local intelligence</p>
-          </div>
+          <p className="text-sm italic">AI-Driven Real Estate Intelligence for England.</p>
+          <p className="mt-4 text-[10px] opacity-60 uppercase tracking-widest">© 2026 Kadima Systems Ltd</p>
         </div>
       </footer>
     </div>
